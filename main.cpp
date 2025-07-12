@@ -7,6 +7,7 @@ using namespace std;
 #define QR_SIZE 29
 #define DATA_BITS 55 * 8
 #define EC_BITS 15 * 8
+#define QUITE_ZONE 4
 
 int qr[QR_SIZE][QR_SIZE] = {0};
 vector<int> dataStream;
@@ -49,18 +50,42 @@ int main()
 
 void printQr()
 {
-    for (int i = 0; i < QR_SIZE; i += 2)
+    int totalSize = QR_SIZE + (2 * QUITE_ZONE);
+    int expandedQR[totalSize][totalSize];
+
+    for (int i = 0; i < totalSize; i++)
+    {
+        for (int j = 0; j < totalSize; j++)
+        {
+            expandedQR[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i < QR_SIZE; i++)
     {
         for (int j = 0; j < QR_SIZE; j++)
         {
-            int top = qr[i][j];
-            int bottom = (i + 1 < QR_SIZE) ? qr[i + 1][j] : 0;
+            expandedQR[i + QUITE_ZONE][j + QUITE_ZONE] = qr[i][j];
+        }
+    }
 
-            if (top && bottom)
+    for (int i = 0; i < totalSize; i += 2)
+    {
+        for (int j = 0; j < totalSize; j++)
+        {
+            int top = expandedQR[i][j];
+            int bottom = 0;
+
+            if (i + 1 < totalSize)
+            {
+                bottom = expandedQR[i + 1][j];
+            }
+
+            if (top == 1 && bottom == 1)
                 cout << " ";
-            else if (top && !bottom)
+            else if (top == 1 && bottom == 0)
                 cout << "▄";
-            else if (!top && bottom)
+            else if (top == 0 && bottom == 1)
                 cout << "▀";
             else
                 cout << "█";
