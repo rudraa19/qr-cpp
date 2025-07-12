@@ -45,11 +45,21 @@ int main()
 
 void printQr()
 {
-    for (int i = 0; i < QR_SIZE; i++)
+    for (int i = 0; i < QR_SIZE; i += 2)
     {
         for (int j = 0; j < QR_SIZE; j++)
         {
-            cout << qr[i][j] << " ";
+            int top = qr[i][j];
+            int bottom = (i + 1 < QR_SIZE) ? qr[i + 1][j] : 0;
+
+            if (top && bottom)
+                cout << " ";
+            else if (top && !bottom)
+                cout << "▄";
+            else if (!top && bottom)
+                cout << "▀";
+            else
+                cout << "█";
         }
         cout << endl;
     }
