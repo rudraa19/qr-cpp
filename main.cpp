@@ -6,13 +6,18 @@ using namespace std;
 
 #define QR_SIZE 29
 #define DATA_BITS 55 * 8
+#define EC_BITS 15 * 8
 
 int qr[QR_SIZE][QR_SIZE] = {0};
 vector<int> dataStream;
+vector<int> ecStream;
+int divisor[] = {1, 29, 196, 111, 163, 112, 74, 10, 105, 105, 139, 132, 151, 32, 134, 26};
 
 void printQr();
 void getDataStream(string inp);
 void printArr(vector<int> arr);
+int gfMul(int a, int b);
+void polynomialDivide();
 
 int main()
 {
@@ -22,6 +27,10 @@ int main()
 
     getDataStream(inp);
     printArr(dataStream);
+
+    polynomialDivide();
+    cout << endl;
+    printArr(ecStream);
 
     printQr();
     return 0;
@@ -92,6 +101,63 @@ void getDataStream(string inp)
             dataStream.push_back(1);
         }
         flag = !flag;
+    }
+}
+
+int gfMul(int a, int b)
+{
+    int result = 0;
+    while (b)
+    {
+        if (b & 1)
+            result ^= a;
+        a <<= 1;
+        if (a & 0x100)
+            a ^= 0x11D;
+        b >>= 1;
+    }
+    return result;
+}
+
+void polynomialDivide()
+{
+    vector<int> messageBytes;
+    for (int i = 0; i < dataStream.size(); i += 8)
+    {
+        int byte = 0;
+        for (int j = 0; j < 8; j++)
+        {
+            byte = (byte << 1) | dataStream[i + j];
+        }
+        messageBytes.push_back(byte);
+    }
+
+    vector<int> remainder = messageBytes;
+    while (remainder.size() < messageBytes.size() + EC_BITS / 8)
+    {
+        remainder.push_back(0);
+    }
+
+    int divisorLen = EC_BITS / 8 + 1;
+    for (int i = 0; i < messageBytes.size(); i++)
+    {
+        int coef = remainder[i];
+        if (coef != 0)
+        {
+            for (int j = 0; j < divisorLen; j++)
+            {
+                remainder[i + j] ^= gfMul(divisor[j], coef);
+            }
+        }
+    }
+
+    for (int i = messageBytes.size(); i < remainder.size(); i++)
+    {
+        string bits = bitset<8>(remainder[i]).to_string();
+        for (int j = 0; j < 8; j++)
+        {
+            ecStream.push_back(bits[j] - '0');
+        }
     }
 }
 
