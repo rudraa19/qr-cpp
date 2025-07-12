@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bitset>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -26,11 +27,22 @@ void assignConstantPattern();
 void fillVariableSlots();
 void assignMask();
 
-int main()
+int main(int argc, char* argv[])
 {
     string inp;
-    cout << "Enter your message: ";
-    getline(cin, inp);
+
+    if(argc > 1 && string(argv[1]) == "-m"){
+
+        if (argc > 2) {
+            inp = argv[2];
+        } else {
+            cout << "No message provided after -m flag.\n";
+            return 1;
+        }
+    } else {
+        cout << "Enter your message: ";
+        getline(cin, inp);
+    }
 
     getDataStream(inp);
     printArr(dataStream);
