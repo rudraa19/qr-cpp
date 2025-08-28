@@ -162,7 +162,7 @@ void Qr::assign_mask()
 
 void Qr::print_qr()
 {
-    int total_size = QR_SIZE + (2 * QUITE_ZONE);
+    int total_size = QR_SIZE + (2 * QUIET_ZONE);
     int expanded_qr[total_size][total_size];
 
     for (int i = 0; i < total_size; i++)
@@ -171,7 +171,7 @@ void Qr::print_qr()
 
     for (int i = 0; i < QR_SIZE; i++)
         for (int j = 0; j < QR_SIZE; j++)
-            expanded_qr[i + QUITE_ZONE][j + QUITE_ZONE] = qr[i][j];
+            expanded_qr[i + QUIET_ZONE][j + QUIET_ZONE] = qr[i][j];
 
     for (int i = 0; i < total_size; i += 2)
     {

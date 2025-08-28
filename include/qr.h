@@ -9,7 +9,7 @@ using namespace std;
 #define QR_SIZE 29
 #define DATA_BITS 55 * 8
 #define EC_BITS 15 * 8
-#define QUITE_ZONE 4
+#define QUIET_ZONE 4
 
 class Qr
 {
