@@ -8,6 +8,12 @@ using namespace std;
 
 Qr::Qr(string msg) : msg(msg)
 {
+    if (msg.length() > 52)
+    {
+        cout << "Error: message length is greater than 52, try a smaller message" << endl;
+        exit(1);
+    }
+
     for (int i = 0; i < QR_SIZE; i++)
         for (int j = 0; j < QR_SIZE; j++)
             qr[i][j] = 0;
