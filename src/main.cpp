@@ -12,5 +12,7 @@ int main()
     Qr qr(inp);
 
     qr.print_qr();
+    qr.generate_svg("qr.svg");
+
     return 0;
 }

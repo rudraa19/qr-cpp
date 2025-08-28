@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <bitset>
+#include <fstream>
 
 using namespace std;
 
@@ -194,4 +195,57 @@ void Qr::print_qr()
         }
         cout << endl;
     }
+}
+
+void Qr::generate_svg(string output)
+{
+    if (output.size() < 4 || !(output.substr(output.size() - 4) == ".svg" || output.substr(output.size() - 4) == ".SVG"))
+        output += ".svg";
+
+    const int size = 29;
+    const int module_size = 10;
+    const int margin = 4 * module_size;
+    const int total_size = (size * module_size) + (2 * margin);
+
+    ofstream file(output);
+    if (!file.is_open())
+    {
+        cout << "Error: Could not create file " << output << endl;
+        return;
+    }
+
+    file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    file << "<svg xmlns=\"http://www.w3.org/2000/svg\" ";
+    file << "width=\"" << total_size << "\" height=\"" << total_size << "\" ";
+    file << "viewBox=\"0 0 " << total_size << " " << total_size << "\" ";
+    file << "shape-rendering=\"crispEdges\">\n";
+
+    file << "<rect width=\"" << total_size
+         << "\" height=\"" << total_size
+         << "\" fill=\"white\"/>\n";
+
+    file << "<path d=\"";
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            if (qr[i][j] == 1)
+            {
+                int x = margin + (j * module_size);
+                int y = margin + (i * module_size);
+
+                file << "M" << x << " " << y
+                     << "h" << module_size
+                     << "v" << module_size
+                     << "h-" << module_size
+                     << "z ";
+            }
+        }
+    }
+    file << "\" fill=\"black\"/>\n";
+
+    file << "</svg>\n";
+
+    file.close();
+    cout << "QR code SVG generated successfully: " << output << endl;
 }

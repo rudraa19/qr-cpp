@@ -35,6 +35,7 @@ private:
 public:
     Qr(string msg);
     void print_qr();
+    void generate_svg(string output);
 };
 
 #endif
