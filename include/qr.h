@@ -16,7 +16,7 @@ class Qr
 private:
     string msg;
 
-    int qr[QR_SIZE][QR_SIZE] = {0};
+    int qr[QR_SIZE][QR_SIZE];
     vector<int> data_stream;
     vector<int> ec_stream;
 
@@ -29,7 +29,7 @@ private:
     int gf_mul(int a, int b);
     void polynomial_divide();
     void assign_constant_pattern();
-    void fill_variableSlots();
+    void fill_variable_slots();
     void assign_mask();
 
 public:
