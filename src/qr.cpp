@@ -169,6 +169,10 @@ void Qr::assign_mask()
 
 void Qr::print_qr()
 {
+    const string RESET = "\033[0m";
+    const string BG_WHITE = "\033[48;2;255;255;255m";
+    const string FG_BLACK = "\033[38;2;0;0;0m";
+
     int total_size = QR_SIZE + (2 * QUIET_ZONE);
     int expanded_qr[total_size][total_size];
 
@@ -182,6 +186,8 @@ void Qr::print_qr()
 
     for (int i = 0; i < total_size; i += 2)
     {
+        cout << BG_WHITE << FG_BLACK;
+
         for (int j = 0; j < total_size; j++)
         {
             int top = expanded_qr[i][j];
@@ -190,16 +196,17 @@ void Qr::print_qr()
             if (i + 1 < total_size)
                 bottom = expanded_qr[i + 1][j];
 
-            if (top == 1 && bottom == 1)
+            if (top == 0 && bottom == 0)
                 cout << " ";
             else if (top == 1 && bottom == 0)
-                cout << "▄";
-            else if (top == 0 && bottom == 1)
                 cout << "▀";
+            else if (top == 0 && bottom == 1)
+                cout << "▄";
             else
                 cout << "█";
         }
-        cout << endl;
+
+        cout << RESET << endl;
     }
 }
 
